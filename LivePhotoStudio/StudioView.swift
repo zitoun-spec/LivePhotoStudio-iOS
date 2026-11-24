@@ -151,7 +151,7 @@ struct StudioView: View {
                         Text(video.file.displayName)
                             .font(.subheadline.weight(.semibold))
                             .lineLimit(2)
-                        Text("\(Self.time(video.duration)) · \(video.hasAudio ? "Met audio" : "Zonder audio")")
+                        Text("\(Self.time(video.duration, fractional: true)) · \(video.hasAudio ? "Met audio" : "Zonder audio")")
                             .font(.footnote.monospacedDigit())
                             .foregroundStyle(.secondary)
                     }
@@ -245,7 +245,7 @@ struct StudioView: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Color(red: 0.64, green: 0.93, blue: 0.78))
             }
-            LabeledContent("Videoduur", value: Self.time(resources.duration))
+            LabeledContent("Videoduur", value: Self.time(resources.duration, fractional: true))
             LabeledContent("Hoofdframe", value: Self.time(resources.photoTime, fractional: true))
             if let previewError = model.previewError {
                 Text(previewError)

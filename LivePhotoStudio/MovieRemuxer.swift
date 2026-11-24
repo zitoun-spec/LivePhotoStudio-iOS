@@ -138,13 +138,15 @@ final class MovieRemuxer {
         input.markAsFinished()
         guard unfinished.isEmpty else { return }
         writer.endSession(atSourceTime: duration)
-        writer.finishWriting { [self] in
-            queue.async {
-                guard writer.status == .completed else {
-                    fail(writer.error ?? StudioError.writeMovie)
+        writer.finishWriting {
+            self.queue.async {
+                guard self.writer.status == .completed else {
+                    self.fail(self.writer.error ?? StudioError.writeMovie)
                     return
                 }
-                complete(with: .success(()))
+                let pending = self.continuation
+                self.continuation = nil
+                pending?.resume()
             }
         }
     }
@@ -153,13 +155,9 @@ final class MovieRemuxer {
         reader.cancelReading()
         writer.cancelWriting()
         unfinished.removeAll()
-        complete(with: .failure(error))
-    }
-
-    private func complete(with result: Result<Void, Error>) {
         let pending = continuation
         continuation = nil
-        pending?.resume(with: result)
+        pending?.resume(throwing: error)
     }
 
     func validate(at url: URL, sourceDuration: CMTime) async throws -> CMTime {

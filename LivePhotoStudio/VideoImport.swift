@@ -137,7 +137,7 @@ enum StudioError: LocalizedError {
     case writeMovie
     case metadata
     case timelineChanged
-    case previewUnavailable
+    case previewUnavailable(String?)
     case photosPermission
     case saveUnconfirmed
 
@@ -152,7 +152,9 @@ enum StudioError: LocalizedError {
         case .writeMovie: "De video of audio kon niet in de Live Photo worden opgenomen."
         case .metadata: "De koppeling tussen de foto en video kon niet worden gemaakt."
         case .timelineChanged: "De volledige tijdlijn kon niet behouden blijven. Er is niets opgeslagen."
-        case .previewUnavailable: "iOS kon geen Live Photo-voorbeeld openen. Je kunt het volledige bestand in Foto’s proberen op te slaan."
+        case .previewUnavailable(let details):
+            "iOS kon geen Live Photo-voorbeeld openen. Je kunt het volledige bestand in Foto’s proberen op te slaan."
+                + (details.map { "\n\n\($0)" } ?? "")
         case .photosPermission: "Sta in Instellingen toe dat Live Photo Studio foto’s toevoegt."
         case .saveUnconfirmed: "Foto’s heeft de opslag niet bevestigd."
         }

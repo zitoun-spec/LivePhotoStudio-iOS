@@ -5,17 +5,22 @@ enum PhotoLibrary {
     @MainActor
     static func preview(of resources: LivePhotoResources) async throws -> PHLivePhoto {
         try await withCheckedThrowingContinuation { continuation in
+            var pending: CheckedContinuation<PHLivePhoto, Error>? = continuation
             PHLivePhoto.request(
                 withResourceFileURLs: [resources.photoURL, resources.movieURL],
                 placeholderImage: nil,
                 targetSize: .zero,
                 contentMode: .aspectFit
             ) { photo, info in
-                guard (info[PHLivePhotoInfoIsDegradedKey] as? Bool) != true else { return }
-                if let photo, (info[PHLivePhotoInfoCancelledKey] as? Bool) != true {
-                    continuation.resume(returning: photo)
+                let cancelled = (info[PHLivePhotoInfoCancelledKey] as? Bool) == true
+                let error = info[PHLivePhotoInfoErrorKey] as? Error
+                let degraded = (info[PHLivePhotoInfoIsDegradedKey] as? Bool) == true
+                guard !degraded || cancelled || error != nil, let completion = pending else { return }
+                pending = nil
+                if let photo, !cancelled, error == nil {
+                    completion.resume(returning: photo)
                 } else {
-                    continuation.resume(throwing: StudioError.previewUnavailable)
+                    completion.resume(throwing: StudioError.previewUnavailable(error?.localizedDescription))
                 }
             }
         }
