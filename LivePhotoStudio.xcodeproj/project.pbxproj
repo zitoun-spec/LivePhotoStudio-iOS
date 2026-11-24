@@ -1,0 +1,252 @@
+// !$*UTF8*$!
+{
+    archiveVersion = 1;
+    classes = {};
+    objectVersion = 56;
+    objects = {
+
+/* Begin PBXBuildFile section */
+        100000000000000000000001 /* LivePhotoStudioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000001; };
+        100000000000000000000002 /* StudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000002; };
+        100000000000000000000003 /* StudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000003; };
+        100000000000000000000004 /* VideoImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000004; };
+        100000000000000000000005 /* LivePhotoConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000005; };
+        100000000000000000000006 /* MovieRemuxer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000006; };
+        100000000000000000000007 /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000007; };
+        100000000000000000000008 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008; };
+        100000000000000000000009 /* LivePhotoConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009; };
+        10000000000000000000000A /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 20000000000000000000000A; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+        300000000000000000000001 /* App target proxy */ = {
+            isa = PBXContainerItemProxy;
+            containerPortal = 800000000000000000000001 /* Project object */;
+            proxyType = 1;
+            remoteGlobalIDString = 700000000000000000000001;
+            remoteInfo = LivePhotoStudio;
+        };
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+        200000000000000000000001 /* LivePhotoStudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoStudioApp.swift; sourceTree = "<group>"; };
+        200000000000000000000002 /* StudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioView.swift; sourceTree = "<group>"; };
+        200000000000000000000003 /* StudioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioModel.swift; sourceTree = "<group>"; };
+        200000000000000000000004 /* VideoImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoImport.swift; sourceTree = "<group>"; };
+        200000000000000000000005 /* LivePhotoConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoConverter.swift; sourceTree = "<group>"; };
+        200000000000000000000006 /* MovieRemuxer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRemuxer.swift; sourceTree = "<group>"; };
+        200000000000000000000007 /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
+        200000000000000000000008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+        200000000000000000000009 /* LivePhotoConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivePhotoConverterTests.swift; sourceTree = "<group>"; };
+        20000000000000000000000A /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fixtures; sourceTree = "<group>"; };
+        20000000000000000000000B /* LivePhotoStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LivePhotoStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
+        20000000000000000000000C /* LivePhotoStudioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LivePhotoStudioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+        400000000000000000000001 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+        400000000000000000000002 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+        500000000000000000000001 = {
+            isa = PBXGroup;
+            children = (500000000000000000000002, 500000000000000000000003, 500000000000000000000004, 20000000000000000000000D, 20000000000000000000000E);
+            sourceTree = "<group>";
+        };
+        500000000000000000000002 /* LivePhotoStudio */ = {
+            isa = PBXGroup;
+            children = (
+                200000000000000000000001, 200000000000000000000002, 200000000000000000000003,
+                200000000000000000000004, 200000000000000000000005, 200000000000000000000006,
+                200000000000000000000007, 200000000000000000000008,
+            );
+            path = LivePhotoStudio;
+            sourceTree = "<group>";
+        };
+        500000000000000000000003 /* LivePhotoStudioTests */ = {
+            isa = PBXGroup;
+            children = (200000000000000000000009, 20000000000000000000000A);
+            path = LivePhotoStudioTests;
+            sourceTree = "<group>";
+        };
+        500000000000000000000004 /* Products */ = {
+            isa = PBXGroup;
+            children = (20000000000000000000000B, 20000000000000000000000C);
+            name = Products;
+            sourceTree = "<group>";
+        };
+/* End PBXGroup section */
+
+/* Begin PBXSourcesBuildPhase section */
+        600000000000000000000001 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (
+                100000000000000000000001, 100000000000000000000002, 100000000000000000000003,
+                100000000000000000000004, 100000000000000000000005, 100000000000000000000006,
+                100000000000000000000007,
+            );
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        600000000000000000000002 /* Sources */ = {
+            isa = PBXSourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (100000000000000000000009);
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+        600000000000000000000003 /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (100000000000000000000008);
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+        600000000000000000000004 /* Resources */ = {
+            isa = PBXResourcesBuildPhase;
+            buildActionMask = 2147483647;
+            files = (10000000000000000000000A);
+            runOnlyForDeploymentPostprocessing = 0;
+        };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+        700000000000000000000001 /* LivePhotoStudio */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = A00000000000000000000002;
+            buildPhases = (600000000000000000000001, 400000000000000000000001, 600000000000000000000003);
+            buildRules = ();
+            dependencies = ();
+            name = LivePhotoStudio;
+            productName = LivePhotoStudio;
+            productReference = 20000000000000000000000B;
+            productType = "com.apple.product-type.application";
+        };
+        700000000000000000000002 /* LivePhotoStudioTests */ = {
+            isa = PBXNativeTarget;
+            buildConfigurationList = A00000000000000000000003;
+            buildPhases = (600000000000000000000002, 400000000000000000000002, 600000000000000000000004);
+            buildRules = ();
+            dependencies = (900000000000000000000001);
+            name = LivePhotoStudioTests;
+            productName = LivePhotoStudioTests;
+            productReference = 20000000000000000000000C;
+            productType = "com.apple.product-type.bundle.unit-test";
+        };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+        800000000000000000000001 /* Project object */ = {
+            isa = PBXProject;
+            attributes = {
+                BuildIndependentTargetsInParallel = 1;
+                LastSwiftUpdateCheck = 1640;
+                LastUpgradeCheck = 1640;
+                TargetAttributes = {
+                    700000000000000000000001 = {CreatedOnToolsVersion = 16.4; };
+                    700000000000000000000002 = {CreatedOnToolsVersion = 16.4; TestTargetID = 700000000000000000000001; };
+                };
+            };
+            buildConfigurationList = A00000000000000000000001;
+            compatibilityVersion = "Xcode 14.0";
+            developmentRegion = nl;
+            hasScannedForEncodings = 0;
+            knownRegions = (nl, Base);
+            mainGroup = 500000000000000000000001;
+            productRefGroup = 500000000000000000000004;
+            projectDirPath = "";
+            projectRoot = "";
+            targets = (700000000000000000000001, 700000000000000000000002);
+        };
+/* End PBXProject section */
+
+/* Begin PBXTargetDependency section */
+        900000000000000000000001 = {
+            isa = PBXTargetDependency;
+            target = 700000000000000000000001;
+            targetProxy = 300000000000000000000001;
+        };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+        B00000000000000000000001 /* Project Debug */ = {
+            isa = XCBuildConfiguration;
+            name = Debug;
+            buildSettings = {
+                CLANG_ENABLE_MODULES = YES;
+                DEBUG_INFORMATION_FORMAT = dwarf;
+                ENABLE_TESTABILITY = YES;
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                ONLY_ACTIVE_ARCH = YES;
+                SDKROOT = iphoneos;
+                SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+                SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+                SWIFT_VERSION = 5.0;
+            };
+        };
+        B00000000000000000000002 /* Project Release */ = {
+            isa = XCBuildConfiguration;
+            name = Release;
+            buildSettings = {
+                CLANG_ENABLE_MODULES = YES;
+                DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+                IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+                SDKROOT = iphoneos;
+                SWIFT_COMPILATION_MODE = wholemodule;
+                SWIFT_VERSION = 5.0;
+            };
+        };
+        B00000000000000000000003 /* App Debug */ = {
+            isa = XCBuildConfiguration;
+            name = Debug;
+            baseConfigurationReference = 20000000000000000000000D;
+            buildSettings = {};
+        };
+        B00000000000000000000004 /* App Release */ = {
+            isa = XCBuildConfiguration;
+            name = Release;
+            baseConfigurationReference = 20000000000000000000000D;
+            buildSettings = {};
+        };
+        B00000000000000000000005 /* Tests Debug */ = {
+            isa = XCBuildConfiguration;
+            name = Debug;
+            baseConfigurationReference = 20000000000000000000000E;
+            buildSettings = {};
+        };
+        B00000000000000000000006 /* Tests Release */ = {
+            isa = XCBuildConfiguration;
+            name = Release;
+            baseConfigurationReference = 20000000000000000000000E;
+            buildSettings = {};
+        };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+        A00000000000000000000001 /* Project build configurations */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (B00000000000000000000001, B00000000000000000000002);
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
+        A00000000000000000000002 /* App build configurations */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (B00000000000000000000003, B00000000000000000000004);
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
+        A00000000000000000000003 /* Tests build configurations */ = {
+            isa = XCConfigurationList;
+            buildConfigurations = (B00000000000000000000005, B00000000000000000000006);
+            defaultConfigurationIsVisible = 0;
+            defaultConfigurationName = Release;
+        };
+/* End XCConfigurationList section */
+
+        20000000000000000000000D /* App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
+        20000000000000000000000E /* Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
+    };
+    rootObject = 800000000000000000000001 /* Project object */;
+}

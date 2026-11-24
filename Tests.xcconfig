@@ -1,0 +1,9 @@
+BUNDLE_LOADER = $(TEST_HOST)
+CODE_SIGN_STYLE = Automatic
+GENERATE_INFOPLIST_FILE = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+PRODUCT_BUNDLE_IDENTIFIER = nl.livephotostudio.iphone.tests
+PRODUCT_NAME = $(TARGET_NAME)
+SUPPORTED_PLATFORMS = iphonesimulator
+TARGETED_DEVICE_FAMILY = 1
+TEST_HOST = $(BUILT_PRODUCTS_DIR)/LivePhotoStudio.app/LivePhotoStudio
