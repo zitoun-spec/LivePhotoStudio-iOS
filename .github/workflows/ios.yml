@@ -16,7 +16,7 @@ jobs:
     runs-on: macos-15-intel
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build for physical iPhone
         run: |
@@ -32,16 +32,19 @@ jobs:
           set -euo pipefail
           app="$RUNNER_TEMP/studio-device/Build/Products/Release-iphoneos/LivePhotoStudio.app"
           executable=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")
-          xcrun lipo -verify_arch arm64 "$app/$executable"
+          xcrun lipo "$app/$executable" -verify_arch arm64
           build_version=$(xcrun vtool -show-build "$app/$executable")
           printf '%s\n' "$build_version"
-          grep -Eq 'platform +IOS[[:space:]]*$' <<< "$build_version"
+          grep -Eiq 'platform[[:blank:]]+ios[[:space:]]*$' <<< "$build_version"
           if codesign -d "$app/$executable" 2>/dev/null; then
             codesign --remove-signature "$app/$executable"
           fi
           test ! -e "$app/embedded.mobileprovision"
           test ! -e "$app/_CodeSignature"
-          ! codesign -d "$app/$executable" 2>/dev/null
+          if codesign -d "$app/$executable" 2>/dev/null; then
+            echo "The executable is still signed" >&2
+            exit 1
+          fi
           mkdir -p "$RUNNER_TEMP/studio-ipa/Payload" "$RUNNER_TEMP/studio-artifacts"
           ditto "$app" "$RUNNER_TEMP/studio-ipa/Payload/LivePhotoStudio.app"
           ipa="$RUNNER_TEMP/studio-artifacts/LivePhotoStudio.ipa"
@@ -51,7 +54,7 @@ jobs:
           grep -Fx "Payload/LivePhotoStudio.app/$executable" <<< "$entries"
           grep -Fx 'Payload/LivePhotoStudio.app/Info.plist' <<< "$entries"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: LivePhotoStudio
           path: ${{ runner.temp }}/studio-artifacts/LivePhotoStudio.ipa
@@ -60,10 +63,10 @@ jobs:
 
   tests:
     name: Live Photo media tests
-    runs-on: macos-15
+    runs-on: macos-15-intel
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run the conversion tests on an iPhone simulator
         run: |

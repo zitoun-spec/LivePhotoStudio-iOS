@@ -2,7 +2,8 @@ import AVFoundation
 import Foundation
 
 /// Moves compressed samples into a QuickTime container without decoding or re-encoding them.
-final class MovieRemuxer {
+/// Writer callbacks and mutable state are confined to a single serial queue.
+final class MovieRemuxer: @unchecked Sendable {
     private struct Track {
         let source: AVAssetReaderTrackOutput
         let destination: AVAssetWriterInput
