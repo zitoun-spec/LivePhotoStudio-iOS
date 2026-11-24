@@ -1,0 +1,89 @@
+name: iPhone build and tests
+
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  iphone:
+    name: Unsigned iPhone IPA
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build for physical iPhone
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcodebuild -project LivePhotoStudio.xcodeproj -scheme LivePhotoStudio \
+            -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/studio-device" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+
+      - name: Verify and package the unsigned IPA
+        run: |
+          set -euo pipefail
+          app="$RUNNER_TEMP/studio-device/Build/Products/Release-iphoneos/LivePhotoStudio.app"
+          executable=$(/usr/libexec/PlistBuddy -c 'Print CFBundleExecutable' "$app/Info.plist")
+          xcrun lipo -verify_arch arm64 "$app/$executable"
+          build_version=$(xcrun vtool -show-build "$app/$executable")
+          printf '%s\n' "$build_version"
+          grep -Eq 'platform +IOS[[:space:]]*$' <<< "$build_version"
+          if codesign -d "$app/$executable" 2>/dev/null; then
+            codesign --remove-signature "$app/$executable"
+          fi
+          test ! -e "$app/embedded.mobileprovision"
+          test ! -e "$app/_CodeSignature"
+          ! codesign -d "$app/$executable" 2>/dev/null
+          mkdir -p "$RUNNER_TEMP/studio-ipa/Payload" "$RUNNER_TEMP/studio-artifacts"
+          ditto "$app" "$RUNNER_TEMP/studio-ipa/Payload/LivePhotoStudio.app"
+          ipa="$RUNNER_TEMP/studio-artifacts/LivePhotoStudio.ipa"
+          ditto -c -k --keepParent "$RUNNER_TEMP/studio-ipa/Payload" "$ipa"
+          unzip -tq "$ipa"
+          entries=$(unzip -Z1 "$ipa")
+          grep -Fx "Payload/LivePhotoStudio.app/$executable" <<< "$entries"
+          grep -Fx 'Payload/LivePhotoStudio.app/Info.plist' <<< "$entries"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LivePhotoStudio
+          path: ${{ runner.temp }}/studio-artifacts/LivePhotoStudio.ipa
+          if-no-files-found: error
+          compression-level: 0
+
+  tests:
+    name: Live Photo media tests
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run the conversion tests on an iPhone simulator
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun simctl list devices available --json > "$RUNNER_TEMP/ios-devices.json"
+          device=$(python3 - "$RUNNER_TEMP/ios-devices.json" <<'PY'
+          import json
+          import sys
+
+          with open(sys.argv[1]) as source:
+              runtimes = json.load(source)["devices"]
+          for runtime, devices in sorted(runtimes.items(), reverse=True):
+              if ".iOS-" in runtime:
+                  iphone = next((device for device in devices if device["name"].startswith("iPhone")), None)
+                  if iphone:
+                      print(iphone["udid"])
+                      break
+          else:
+              sys.exit("No available iPhone simulator")
+          PY
+          )
+          xcodebuild -project LivePhotoStudio.xcodeproj -scheme LivePhotoStudio \
+            -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$device" \
+            -derivedDataPath "$RUNNER_TEMP/studio-simulator" -parallel-testing-enabled NO test
