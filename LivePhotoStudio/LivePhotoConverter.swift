@@ -47,6 +47,10 @@ enum LivePhotoConverter {
             let remuxer = try await MovieRemuxer(video: video, outputURL: movieURL, identifier: identifier)
             try await remuxer.write(stillTime: frame.actualTime, duration: video.duration)
             let duration = try await remuxer.validate(at: movieURL, sourceDuration: video.duration)
+            let marker = try await readStillImageMarker(in: AVURLAsset(url: movieURL))
+            guard abs(CMTimeSubtract(marker.timeRange.start, frame.actualTime).seconds) <= 1.0 / 600.0 else {
+                throw StudioError.metadata
+            }
 
             return LivePhotoResources(
                 directory: directory, photoURL: photoURL, movieURL: movieURL,
@@ -56,6 +60,25 @@ enum LivePhotoConverter {
             directory.remove()
             throw error
         }
+    }
+
+    static func readStillImageMarker(in movie: AVAsset) async throws -> AVTimedMetadataGroup {
+        let tracks = try await movie.loadTracks(withMediaType: .metadata)
+        guard tracks.count == 1, let track = tracks.first else { throw StudioError.metadata }
+        let reader = try AVAssetReader(asset: movie)
+        let output = AVAssetReaderTrackOutput(track: track, outputSettings: nil)
+        guard reader.canAdd(output) else { throw StudioError.metadata }
+        reader.add(output)
+        guard reader.startReading() else { throw reader.error ?? StudioError.metadata }
+        defer { reader.cancelReading() }
+
+        while let sample = output.copyNextSampleBuffer() {
+            guard CMSampleBufferGetNumSamples(sample) > 0,
+                  let group = AVTimedMetadataGroup(sampleBuffer: sample),
+                  group.items.contains(where: { $0.key as? String == stillImageKey }) else { continue }
+            return group
+        }
+        throw reader.error ?? StudioError.metadata
     }
 
     private static func writePhoto(_ image: CGImage, to url: URL, identifier: String) throws {

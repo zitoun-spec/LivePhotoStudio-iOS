@@ -72,6 +72,7 @@ final class MovieRemuxer: @unchecked Sendable {
         )
         guard status == noErr, let metadataFormat else { throw StudioError.metadata }
         let metadataInput = AVAssetWriterInput(mediaType: .metadata, outputSettings: nil, sourceFormatHint: metadataFormat)
+        metadataInput.mediaTimeScale = 600
         guard writer.canAdd(metadataInput) else { throw StudioError.metadata }
         writer.add(metadataInput)
         self.metadata = AVAssetWriterInputMetadataAdaptor(assetWriterInput: metadataInput)
@@ -102,7 +103,7 @@ final class MovieRemuxer: @unchecked Sendable {
         item.key = LivePhotoConverter.stillImageKey as NSString
         item.dataType = kCMMetadataBaseDataType_SInt8 as String
         item.value = NSNumber(value: Int8(-1))
-        let markerDuration = min(CMTime(value: 1, timescale: 600), CMTimeSubtract(duration, stillTime))
+        let markerDuration = min(CMTime(value: 1, timescale: 30), CMTimeSubtract(duration, stillTime))
         let marker = AVTimedMetadataGroup(items: [item], timeRange: CMTimeRange(start: stillTime, duration: markerDuration))
 
         metadata.assetWriterInput.requestMediaDataWhenReady(on: queue) { [self] in

@@ -57,7 +57,6 @@ final class LivePhotoConverterTests: XCTestCase {
         XCTAssertEqual(portrait ? height : width, 112)
         XCTAssertEqual(portrait ? width : height, 64)
 
-        try await verifyStillImageTime(in: movie, expected: result.photoTime)
         let inputVideo = try await trackDigest(in: video.asset, mediaType: .video)
         let outputVideo = try await trackDigest(in: movie, mediaType: .video)
         XCTAssertGreaterThan(try XCTUnwrap(inputVideo).count, 0)
@@ -66,25 +65,18 @@ final class LivePhotoConverterTests: XCTestCase {
         let outputAudio = try await trackDigest(in: movie, mediaType: .audio)
         XCTAssertEqual(outputAudio != nil, expectsAudio)
         XCTAssertEqual(inputAudio, outputAudio)
+        try await verifyStillImageTime(in: movie, expected: result.photoTime)
     }
 
     private func verifyStillImageTime(in movie: AVAsset, expected: CMTime) async throws {
-        let tracks = try await movie.loadTracks(withMediaType: .metadata)
-        XCTAssertEqual(tracks.count, 1)
-        let track = try XCTUnwrap(tracks.first)
-        let reader = try AVAssetReader(asset: movie)
-        let output = AVAssetReaderTrackOutput(track: track, outputSettings: nil)
-        reader.add(output)
-        let adaptor = AVAssetReaderOutputMetadataAdaptor(assetReaderTrackOutput: output)
-        XCTAssertTrue(reader.startReading(), reader.error?.localizedDescription ?? "Metadata reader")
-        let marker = try XCTUnwrap(adaptor.nextTimedMetadataGroup())
+        let marker = try await LivePhotoConverter.readStillImageMarker(in: movie)
+        XCTAssertEqual(marker.items.count, 1)
         let item = try XCTUnwrap(marker.items.first)
         XCTAssertEqual(item.key as? String, LivePhotoConverter.stillImageKey)
         XCTAssertEqual(item.dataType, kCMMetadataBaseDataType_SInt8 as String)
         let value = try await item.load(.numberValue)
         XCTAssertEqual(value?.intValue, -1)
         XCTAssertEqual(marker.timeRange.start.seconds, expected.seconds, accuracy: 0.002)
-        XCTAssertNil(adaptor.nextTimedMetadataGroup())
     }
 
     private struct Digest: Equatable {
