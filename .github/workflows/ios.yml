@@ -68,6 +68,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Run the media tests with native macOS AVFoundation
+        timeout-minutes: 7
+        run: swift test --scratch-path "$RUNNER_TEMP/studio-mac-tests"
+
       - name: Select the iPhone simulator
         run: |
           set -euo pipefail

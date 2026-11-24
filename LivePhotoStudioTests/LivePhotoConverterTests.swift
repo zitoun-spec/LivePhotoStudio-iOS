@@ -25,7 +25,12 @@ final class LivePhotoConverterTests: XCTestCase {
         _ name: String, _ ext: String, duration expectedDuration: Double, audio expectsAudio: Bool,
         frame fraction: Double? = nil, portrait: Bool = false
     ) async throws {
-        let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext, subdirectory: "Fixtures"))
+        #if SWIFT_PACKAGE
+        let fixtureBundle = Bundle.module
+        #else
+        let fixtureBundle = Bundle(for: Self.self)
+        #endif
+        let fixture = try XCTUnwrap(fixtureBundle.url(forResource: name, withExtension: ext, subdirectory: "Fixtures"))
         let file = try ImportedFile.copy(from: fixture)
         defer { file.directory.remove() }
         let video = try await ImportedVideo(file: file)
