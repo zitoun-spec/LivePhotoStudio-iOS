@@ -95,8 +95,11 @@ final class LivePhotoConverterTests: XCTestCase {
         var hasher = SHA256()
         var sampleCount = 0
         while let sample = output.copyNextSampleBuffer() {
-            sampleCount += CMSampleBufferGetNumSamples(sample)
-            let buffer = try XCTUnwrap(CMSampleBufferGetDataBuffer(sample))
+            // AVFoundation also emits zero-sample buffers to represent edits between media samples.
+            let samples = CMSampleBufferGetNumSamples(sample)
+            guard samples > 0 else { continue }
+            sampleCount += samples
+            let buffer = try XCTUnwrap(CMSampleBufferGetDataBuffer(sample), "Missing payload in \(mediaType.rawValue)")
             let count = CMBlockBufferGetDataLength(buffer)
             var data = Data(count: count)
             let status = data.withUnsafeMutableBytes { bytes in
