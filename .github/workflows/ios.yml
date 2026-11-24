@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Run the conversion tests on an iPhone simulator
+      - name: Select the iPhone simulator
         run: |
           set -euo pipefail
           xcodebuild -version
@@ -94,6 +94,23 @@ jobs:
               sys.exit("No available iPhone simulator")
           PY
           )
+          printf 'TEST_DEVICE=%s\n' "$device" >> "$GITHUB_ENV"
+
+      - name: Build the simulator and test targets
+        run: |
           xcodebuild -project LivePhotoStudio.xcodeproj -scheme LivePhotoStudio \
-            -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$device" \
-            -derivedDataPath "$RUNNER_TEMP/studio-simulator" -parallel-testing-enabled NO test
+            -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$TEST_DEVICE" \
+            -derivedDataPath "$RUNNER_TEMP/studio-simulator" build-for-testing
+
+      - name: Boot the iPhone simulator
+        timeout-minutes: 6
+        run: xcrun simctl bootstatus "$TEST_DEVICE" -b
+
+      - name: Run the conversion tests on the booted simulator
+        timeout-minutes: 8
+        run: |
+          xcodebuild -project LivePhotoStudio.xcodeproj -scheme LivePhotoStudio \
+            -configuration Debug -sdk iphonesimulator -destination "platform=iOS Simulator,id=$TEST_DEVICE" \
+            -derivedDataPath "$RUNNER_TEMP/studio-simulator" -parallel-testing-enabled NO \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 60 \
+            -maximum-test-execution-time-allowance 120 test-without-building
